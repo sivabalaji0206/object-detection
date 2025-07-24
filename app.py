@@ -40,7 +40,7 @@ CONFIG_FILE = "yolov3.cfg"
 LABELS_FILE = "coco.names"
 
 # Load YOLO
-net = cv2.dnn.readNetFromDarknet(CONFIG_FILE, FILE_NAME)
+net = cv2.dnn.readNet("yolov3.onnx")
 layer_names = net.getLayerNames()
 output_layers = [layer_names[i - 1] for i in net.getUnconnectedOutLayers().flatten()]
 
