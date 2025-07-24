@@ -50,5 +50,28 @@ def predict():
         "detections": detections
     })
 
+@app.route("/", methods=["GET"])
+def home():
+    return "✅ YOLOv8 Flask API is live!", 200
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    if 'image' not in request.files:
+        return jsonify({"error": "No image uploaded"}), 400
+
+    image = request.files['image']
+    results = model(image)  # Run YOLOv8 inference
+
+    detections = []
+    for box in results[0].boxes:
+        detections.append({
+            "class": int(box.cls[0]),
+            "confidence": float(box.conf[0]),
+            "bbox": box.xyxy[0].tolist()
+        })
+
+    return jsonify({"detections": detections})
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
